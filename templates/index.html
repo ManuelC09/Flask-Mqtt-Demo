@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Flask</title>
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById("message").value;
+            const response = await fetch('/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message }),
+            });
+            const data = await response.json();
+            alert(data.message);
+        }
+
+        async function fetchMessages() {
+            const response = await fetch('/messages');
+            const data = await response.json();
+            const messages = data.messages;
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = messages.map(msg => `<p>${msg}</p>`).join("");
+        }
+
+        setInterval(fetchMessages, 1000); // Actualiza los mensajes cada segundo
+    </script>
+</head>
+<body>
+    <h1>MQTT Flask</h1>
+    <input type="text" id="message" placeholder="Escribe tu mensaje">
+    <button onclick="sendMessage()">Enviar</button>
+    <h2>Mensajes recibidos:</h2>
+    <div id="messages"></div>
+</body>
+</html>
